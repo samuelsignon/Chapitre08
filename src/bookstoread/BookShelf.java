@@ -2,7 +2,6 @@ package bookstoread;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class BookShelf {
@@ -12,7 +11,7 @@ public class BookShelf {
         return books;
     }
 
-    public void add(String bookToAdd) {
+    public void add() {
        books.addAll(Arrays.asList(bookToAdd));
     }
 }
