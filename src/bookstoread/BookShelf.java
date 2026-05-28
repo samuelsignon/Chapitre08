@@ -1,10 +1,10 @@
 package bookstoread;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BookShelf {
+
     private final List<String> books = new ArrayList<>();
 
     public List<String> books() {
@@ -12,6 +12,6 @@ public class BookShelf {
     }
 
     public void add() {
-       books.addAll(Arrays.asList(bookToAdd));
+        // Ne rien faire
     }
 }
