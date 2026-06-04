@@ -24,11 +24,15 @@ public class BookShelf {
         }
     }
 
+    // ✅ méthode par défaut
     public List<Book> arrange() {
-        return books.stream().sorted().collect(Collectors.toList());
+        return arrange(Comparator.naturalOrder());
     }
 
+    // ✅ méthode principale (logique de tri unique)
     public List<Book> arrange(Comparator<Book> criteria) {
-        return books.stream().sorted(criteria).collect(Collectors.toList());
+        return books.stream()
+                .sorted(criteria)
+                .collect(Collectors.toList());
     }
 }
