@@ -1,8 +1,9 @@
 package bookstoread;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,58 +11,94 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class BookShelfSpec {
+
     private BookShelf shelf;
 
+    private Book effectiveJava;
+    private Book codeComplete;
+    private Book mythicalManMonth;
+
     @BeforeEach
-    void init() throws Exception {
+    void init() {
         shelf = new BookShelf();
+
+        effectiveJava = new Book(
+                "Effective Java",
+                "Joshua Bloch",
+                LocalDate.of(2008, Month.MAY, 8)
+        );
+
+        codeComplete = new Book(
+                "Code Complete",
+                "Steve McConnell",
+                LocalDate.of(2004, Month.JUNE, 9)
+        );
+
+        mythicalManMonth = new Book(
+                "The Mythical Man-Month",
+                "Frederick Phillips Brooks",
+                LocalDate.of(1975, Month.JANUARY, 1)
+        );
     }
 
     @Test
-    public void shelfEmptyWhenNoBookAdded() throws Exception {
-        List<String> books = shelf.books();
-        assertTrue(books.isEmpty(), () -> "BookShelf should be empty.");
+    void shelfEmptyWhenNoBookAdded() {
+        List<Book> books = shelf.books();
+        assertTrue(books.isEmpty());
     }
 
     @Test
     void bookshelfContainsTwoBooksWhenTwoBooksAdded() {
-        shelf.add("Effective Java", "Code Complete");
-        List<String> books = shelf.books();
-        assertEquals(2, books.size(), () -> "BookShelf should have two books.");
+        shelf.add(effectiveJava, codeComplete);
+
+        List<Book> books = shelf.books();
+
+        assertEquals(2, books.size());
     }
 
     @Test
-    public void emptyBookShelfWhenAddIsCalledWithoutBooks() {
+    void emptyBookShelfWhenAddIsCalledWithoutBooks() {
         shelf.add();
-        List<String> books = shelf.books();
-        assertTrue(books.isEmpty(), () -> "BookShelf should be empty.");
+
+        List<Book> books = shelf.books();
+
+        assertTrue(books.isEmpty());
     }
 
     @Test
     void booksReturnedFromBookShelfIsImmutableForClient() {
-        shelf.add("Effective Java", "Code Complete");
-        List<String> books = shelf.books();
-        try {
-            books.add("The Mythical Man-Month");
-            fail(() -> "Should not be able to add book to books");
-        } catch (Exception e) {
-            assertTrue(e instanceof UnsupportedOperationException, () -> "Should throw UnsupportedOperationException.");
-        }
+        shelf.add(effectiveJava, codeComplete);
+
+        List<Book> books = shelf.books();
+
+        assertThrows(UnsupportedOperationException.class, () -> {
+            books.add(mythicalManMonth);
+        });
     }
 
     @Test
     void bookshelfArrangedByBookTitle() {
-        shelf.add("Effective Java", "Code Complete","The Mythical Man-Month" );
-        List<String> books = shelf.arrange();
-        assertEquals(Arrays.asList("Code Complete", "Effective Java", "The Mythical Man-Month"), books, () -> "Books in a bookshelf should be arranged lexicographically by book title");
+        shelf.add(effectiveJava, codeComplete, mythicalManMonth);
+
+        List<Book> books = shelf.arrange();
+
+        assertEquals(
+                Arrays.asList(codeComplete, effectiveJava, mythicalManMonth),
+                books
+        );
     }
 
     @Test
     void booksInBookShelfAreInInsertionOrderAfterCallingArrange() {
-        shelf.add("Effective Java", "Code Complete", "The Mythical Man-Month");
-        shelf.arrange();
-        List<String> books = shelf.books();
-        assertEquals(Arrays.asList("Effective Java", "Code Complete", "The Mythical Man-Month"), books, () -> "Books in bookshelf are in insertion order");
-    }
+        shelf.add(effectiveJava, codeComplete, mythicalManMonth);
 
+        shelf.arrange();
+
+        List<Book> books = shelf.books();
+
+        assertEquals(
+                Arrays.asList(effectiveJava, codeComplete, mythicalManMonth),
+                books
+        );
+    }
 }
