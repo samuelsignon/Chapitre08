@@ -36,10 +36,12 @@ public class Book implements Comparable<Book> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Book)) return false;
+
         Book book = (Book) o;
-        return Objects.equals(title, book.title) &&
-                Objects.equals(author, book.author) &&
-                Objects.equals(publishedOn, book.publishedOn);
+
+        return Objects.equals(title, book.title)
+                && Objects.equals(author, book.author)
+                && Objects.equals(publishedOn, book.publishedOn);
     }
 
     @Override
