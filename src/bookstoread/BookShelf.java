@@ -1,9 +1,8 @@
 package bookstoread;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.time.Year;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BookShelf {
@@ -14,25 +13,29 @@ public class BookShelf {
         return Collections.unmodifiableList(books);
     }
 
-    public void add() {
-        // ne rien faire
-    }
-
     public void add(Book... newBooks) {
-        for (Book book : newBooks) {
-            books.add(book);
-        }
+        books.addAll(Arrays.asList(newBooks));
     }
 
-    // ✅ méthode par défaut
+    // Tri par ordre naturel (par titre)
     public List<Book> arrange() {
         return arrange(Comparator.naturalOrder());
     }
 
-    // ✅ méthode principale (logique de tri unique)
+    // Tri selon un critère personnalisé
     public List<Book> arrange(Comparator<Book> criteria) {
         return books.stream()
                 .sorted(criteria)
                 .collect(Collectors.toList());
+    }
+
+    // Regroupement par année de publication
+    public Map<Year, List<Book>> groupByPublicationYear() {
+        return groupBy(book -> Year.of(book.getPublishedOn().getYear()));
+    }
+
+    // Regroupement générique selon un critère quelconque
+    public <K> Map<K, List<Book>> groupBy(Function<Book, K> fx) {
+        return books.stream().collect(Collectors.groupingBy(fx));
     }
 }
