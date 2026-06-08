@@ -44,12 +44,11 @@ public class BookShelfSpec {
         );
     }
 
-    // ── Fonctionnalité 1 : Ajouter des livres ──────────────────────────────
+    // ── Fonctionnalité 1 : Ajouter des livres ─────────────────────────────
 
     @Test
     void shelfEmptyWhenNoBookAdded() {
-        List<Book> books = shelf.books();
-        assertTrue(books.isEmpty());
+        assertTrue(shelf.books().isEmpty());
     }
 
     @Test
@@ -72,7 +71,7 @@ public class BookShelfSpec {
                 books.add(mythicalManMonth));
     }
 
-    // ── Fonctionnalité 2 : Organiser les livres ────────────────────────────
+    // ── Fonctionnalité 2 : Organiser les livres ───────────────────────────
 
     @Test
     void bookshelfArrangedByBookTitle() {
@@ -84,8 +83,7 @@ public class BookShelfSpec {
     @Test
     void booksInBookShelfAreInInsertionOrderAfterCallingArrange() {
         shelf.add(effectiveJava, codeComplete, mythicalManMonth);
-        shelf.arrange();
-        // L'ordre d'insertion ne doit pas être modifié
+        shelf.arrange(); // ne doit pas modifier l'ordre interne
         assertEquals(asList(effectiveJava, codeComplete, mythicalManMonth), shelf.books());
     }
 
@@ -97,51 +95,46 @@ public class BookShelfSpec {
         assertEquals(asList(mythicalManMonth, effectiveJava, codeComplete), books);
     }
 
-    // ── Exercice 1 : Tri par date de publication ───────────────────────────
+    // ── Exercice 1 : Tri par date de publication (page 73) ────────────────
 
     @Test
     void bookshelfArrangedByPublicationDate() {
         shelf.add(effectiveJava, codeComplete, mythicalManMonth);
 
-        // Tri croissant par date de publication
         List<Book> books = shelf.arrange(
                 Comparator.comparing(Book::getPublishedOn)
         );
 
-        // mythicalManMonth (1975) → codeComplete (2004) → effectiveJava (2008)
-        assertEquals(asList(mythicalManMonth, codeComplete, effectiveJava), books,
-                () -> "Les livres doivent être triés par date de publication croissante");
+        // 1975 → 2004 → 2008
+        assertEquals(
+                asList(mythicalManMonth, codeComplete, effectiveJava),
+                books,
+                () -> "Les livres doivent être triés par date de publication croissante"
+        );
     }
 
-    // ── Fonctionnalité 3 : Grouper les livres ──────────────────────────────
+    // ── Fonctionnalité 3 : Grouper les livres (pages 80-88) ───────────────
 
+    // Page 84 : test du regroupement par année de publication
     @Test
     void groupBooksInsideBookShelfByPublicationYear() {
         shelf.add(effectiveJava, codeComplete, mythicalManMonth);
 
         Map<Year, List<Book>> booksByYear = shelf.groupByPublicationYear();
 
-        // Chaque livre a une année unique ici
-        assertTrue(booksByYear.containsKey(Year.of(2008)));
-        assertTrue(booksByYear.containsKey(Year.of(2004)));
-        assertTrue(booksByYear.containsKey(Year.of(1975)));
-
-        assertEquals(asList(effectiveJava),     booksByYear.get(Year.of(2008)));
-        assertEquals(asList(codeComplete),      booksByYear.get(Year.of(2004)));
-        assertEquals(asList(mythicalManMonth),  booksByYear.get(Year.of(1975)));
+        assertEquals(asList(effectiveJava),    booksByYear.get(Year.of(2008)));
+        assertEquals(asList(codeComplete),     booksByYear.get(Year.of(2004)));
+        assertEquals(asList(mythicalManMonth), booksByYear.get(Year.of(1975)));
     }
 
+    // Page 86 : test du regroupement avec un critère fourni par le client
     @Test
     void groupBooksInsideBookShelfByUserProvidedCriteria() {
         shelf.add(effectiveJava, codeComplete, mythicalManMonth);
 
-        // Regroupement par auteur
+        // Exemple : regroupement par auteur
         Map<String, List<Book>> booksByAuthor =
                 shelf.groupBy(Book::getAuthor);
-
-        assertTrue(booksByAuthor.containsKey("Joshua Bloch"));
-        assertTrue(booksByAuthor.containsKey("Steve McConnell"));
-        assertTrue(booksByAuthor.containsKey("Frederick Phillips Brooks"));
 
         assertEquals(asList(effectiveJava),    booksByAuthor.get("Joshua Bloch"));
         assertEquals(asList(codeComplete),     booksByAuthor.get("Steve McConnell"));

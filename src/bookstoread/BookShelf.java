@@ -17,24 +17,24 @@ public class BookShelf {
         books.addAll(Arrays.asList(newBooks));
     }
 
-    // Tri par ordre naturel (par titre)
+    // Tri par ordre naturel (par titre) — délègue à la méthode principale
     public List<Book> arrange() {
         return arrange(Comparator.naturalOrder());
     }
 
-    // Tri selon un critère personnalisé
+    // Tri selon un critère personnalisé fourni par le client
     public List<Book> arrange(Comparator<Book> criteria) {
         return books.stream()
                 .sorted(criteria)
                 .collect(Collectors.toList());
     }
 
-    // Regroupement par année de publication
+    // Page 87-88 : refactorisé pour utiliser la méthode générique groupBy()
     public Map<Year, List<Book>> groupByPublicationYear() {
         return groupBy(book -> Year.of(book.getPublishedOn().getYear()));
     }
 
-    // Regroupement générique selon un critère quelconque
+    // Page 86 : méthode générique — le client fournit son propre critère de regroupement
     public <K> Map<K, List<Book>> groupBy(Function<Book, K> fx) {
         return books.stream().collect(Collectors.groupingBy(fx));
     }
